@@ -14,7 +14,6 @@ public class Category {
     @ManyToMany(mappedBy = "categories")
     private Set<Book> books;
 
-    // Getters et Setters
     public Long getId() {
         return id;
     }
@@ -39,7 +38,6 @@ public class Category {
         this.books = books;
     }
 
-    // toString
     @Override
     public String toString() {
         return "Category{" +

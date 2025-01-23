@@ -1,10 +1,13 @@
 package fr.learn.introSpring3.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class Book {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,9 +24,18 @@ public class Book {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private Set<Category> categories;
+    private Set<Category> categories = new HashSet<>();
 
-    // Getters et Setters
+    @JsonIgnore
+    public Author getAuthor() {
+        return author;
+    }
+
+    @JsonIgnore
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
     public Long getId() {
         return id;
     }
@@ -40,30 +52,11 @@ public class Book {
         this.title = title;
     }
 
-    public Author getAuthor() {
-        return author;
-    }
-
     public void setAuthor(Author author) {
         this.author = author;
     }
 
-    public Set<Category> getCategories() {
-        return categories;
-    }
-
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
-    }
-
-    // toString
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", author=" + author +
-                ", categories=" + categories +
-                '}';
     }
 }

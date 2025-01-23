@@ -14,7 +14,6 @@ public class Author {
     @OneToMany(mappedBy = "author")
     private List<Book> books;
 
-    // Getters et Setters
     public Long getId() {
         return id;
     }
@@ -39,7 +38,6 @@ public class Author {
         this.books = books;
     }
 
-    // toString
     @Override
     public String toString() {
         return "Author{" +
