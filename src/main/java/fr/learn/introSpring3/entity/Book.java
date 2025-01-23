@@ -1,8 +1,6 @@
 package fr.learn.introSpring3.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,6 +11,7 @@ public class Book {
     private Long id;
 
     private String title;
+    private String content;  // Vérifie que cet attribut existe bien
 
     @ManyToOne
     @JoinColumn(name = "author_id")
@@ -24,8 +23,9 @@ public class Book {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private Set<Category> categories = new HashSet<>();
+    private Set<Category> categories;
 
+    // Getters et Setters
     public Long getId() {
         return id;
     }
@@ -42,11 +42,18 @@ public class Book {
         this.title = title;
     }
 
+    public String getContent() {  // Assure-toi que cette méthode existe
+        return content;
+    }
+
+    public void setContent(String content) {  // Et cette méthode aussi
+        this.content = content;
+    }
+
     public Author getAuthor() {
         return author;
     }
 
-    @JsonIgnore
     public void setAuthor(Author author) {
         this.author = author;
     }
@@ -55,7 +62,6 @@ public class Book {
         return categories;
     }
 
-    @JsonIgnore
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
     }
