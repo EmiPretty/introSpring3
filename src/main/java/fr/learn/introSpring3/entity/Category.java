@@ -1,10 +1,12 @@
 package fr.learn.introSpring3.entity;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -12,8 +14,9 @@ public class Category {
     private String name;
 
     @ManyToMany(mappedBy = "categories")
-    private Set<Book> books;
+    private Set<Book> books = new HashSet<>();
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -36,14 +39,5 @@ public class Category {
 
     public void setBooks(Set<Book> books) {
         this.books = books;
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", books=" + books +
-                '}';
     }
 }

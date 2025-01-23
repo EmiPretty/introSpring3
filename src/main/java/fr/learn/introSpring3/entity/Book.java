@@ -26,16 +26,7 @@ public class Book {
     )
     private Set<Category> categories = new HashSet<>();
 
-    @JsonIgnore
-    public Author getAuthor() {
-        return author;
-    }
-
-    @JsonIgnore
-    public Set<Category> getCategories() {
-        return categories;
-    }
-
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -52,10 +43,20 @@ public class Book {
         this.title = title;
     }
 
+    public Author getAuthor() {
+        return author;
+    }
+
+    @JsonIgnore
     public void setAuthor(Author author) {
         this.author = author;
     }
 
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    @JsonIgnore
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
     }
