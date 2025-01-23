@@ -2,7 +2,7 @@ package fr.learn.introSpring3.dto;
 
 import java.util.Set;
 
-public class PostDto {
+public class BookDto {
     private Long id;
     private String title;
     private String content;

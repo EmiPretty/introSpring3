@@ -1,8 +1,6 @@
 package fr.learn.introSpring3.controller;
 
 import fr.learn.introSpring3.entity.Book;
-import fr.learn.introSpring3.entity.Author;
-import fr.learn.introSpring3.entity.Category;
 import fr.learn.introSpring3.repository.BookRepository;
 import fr.learn.introSpring3.repository.AuthorRepository;
 import fr.learn.introSpring3.repository.CategoryRepository;
