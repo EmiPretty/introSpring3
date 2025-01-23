@@ -16,7 +16,6 @@ public class Category {
     @ManyToMany(mappedBy = "categories")
     private Set<Book> books = new HashSet<>();
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

@@ -25,26 +25,22 @@ public class BookController {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    // Créer un livre
     @PostMapping
     public Book createBook(@RequestBody Book book) {
         return bookRepository.save(book);
     }
 
-    // Lister tous les livres
     @GetMapping
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
-    // Trouver un livre par ID
     @GetMapping("/{id}")
     public Book getBook(@PathVariable Long id) {
         Optional<Book> book = bookRepository.findById(id);
         return book.orElse(null);
     }
 
-    // Mettre à jour un livre
     @PutMapping("/{id}")
     public Book updateBook(@PathVariable Long id, @RequestBody Book book) {
         if (bookRepository.existsById(id)) {
@@ -54,19 +50,16 @@ public class BookController {
         return null;
     }
 
-    // Supprimer un livre
     @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable Long id) {
         bookRepository.deleteById(id);
     }
 
-    // Lister les livres d'un auteur
     @GetMapping("/author/{authorId}")
     public List<Book> getBooksByAuthor(@PathVariable Long authorId) {
         return bookRepository.findByAuthorId(authorId);
     }
 
-    // Lister les livres d'une catégorie
     @GetMapping("/category/{categoryId}")
     public List<Book> getBooksByCategory(@PathVariable Long categoryId) {
         return bookRepository.findByCategories_Id(categoryId);

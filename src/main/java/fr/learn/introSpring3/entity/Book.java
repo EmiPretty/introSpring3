@@ -26,7 +26,6 @@ public class Book {
     )
     private Set<Category> categories = new HashSet<>();
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

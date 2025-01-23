@@ -16,7 +16,6 @@ public class Author {
     @OneToMany(mappedBy = "author")
     private Set<Book> books = new HashSet<>();
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
