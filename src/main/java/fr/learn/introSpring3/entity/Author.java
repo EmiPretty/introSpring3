@@ -16,7 +16,7 @@ public class Author {
     private String name;
 
     @OneToMany(mappedBy = "author")
-    @JsonIgnore  // Ignore la liste des livres pour éviter la boucle infinie
+    @JsonIgnore
     private Set<Book> books = new HashSet<>();
 
     public Long getId() {

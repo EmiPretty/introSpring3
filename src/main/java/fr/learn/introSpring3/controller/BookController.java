@@ -30,13 +30,11 @@ public class BookController {
 
     @PostMapping
     public Book createBook(@RequestBody BookDto bookDto) {
-        // Récupérer l'auteur et les catégories en fonction de leurs IDs
         Author author = authorRepository.findById(bookDto.getAuthor_id())
                 .orElseThrow(() -> new RuntimeException("Author not found"));
 
         Set<Category> categories = new HashSet<>(categoryRepository.findAllById(bookDto.getCategory_ids()));
 
-        // Créer un nouveau livre avec les données du DTO
         Book book = new Book();
         book.setTitle(bookDto.getTitle());
         book.setAuthor(author);
@@ -67,7 +65,6 @@ public class BookController {
 
             Set<Category> categories = new HashSet<>(categoryRepository.findAllById(bookDto.getCategory_ids()));
 
-            // Mettre à jour les champs du livre existant
             existingBook.setTitle(bookDto.getTitle());
             existingBook.setAuthor(author);
             existingBook.setCategories(categories);
