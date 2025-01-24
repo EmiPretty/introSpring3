@@ -1,6 +1,12 @@
 package fr.learn.introSpring3.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -11,10 +17,12 @@ public class Book {
     private Long id;
 
     private String title;
-    private String content;  // Vérifie que cet attribut existe bien
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", nullable = true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonProperty("author")  // Pour que l'auteur apparaisse sous le nom "author"
     private Author author;
 
     @ManyToMany
@@ -23,9 +31,13 @@ public class Book {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private Set<Category> categories;
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonInclude(JsonInclude.Include.NON_NULL) // N'inclut les catégories que si elles existent
+    private Set<Category> categories = new HashSet<>();
 
-    // Getters et Setters
+    // Getters and Setters
+
     public Long getId() {
         return id;
     }
@@ -40,14 +52,6 @@ public class Book {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getContent() {  // Assure-toi que cette méthode existe
-        return content;
-    }
-
-    public void setContent(String content) {  // Et cette méthode aussi
-        this.content = content;
     }
 
     public Author getAuthor() {

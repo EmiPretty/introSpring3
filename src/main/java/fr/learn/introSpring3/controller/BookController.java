@@ -1,7 +1,9 @@
 package fr.learn.introSpring3.controller;
 
-import fr.learn.introSpring3.entity.Book;
 import fr.learn.introSpring3.dto.BookDto;
+import fr.learn.introSpring3.entity.Book;
+import fr.learn.introSpring3.entity.Author;
+import fr.learn.introSpring3.entity.Category;
 import fr.learn.introSpring3.repository.BookRepository;
 import fr.learn.introSpring3.repository.AuthorRepository;
 import fr.learn.introSpring3.repository.CategoryRepository;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/books")
@@ -26,56 +28,51 @@ public class BookController {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    private BookDto convertToDto(Book book) {
-        BookDto bookDto = new BookDto();
-        bookDto.setId(book.getId());
-        bookDto.setTitle(book.getTitle());
-        bookDto.setContent(book.getContent());
-        bookDto.setAuthor_id(book.getAuthor() != null ? book.getAuthor().getId() : null);
-        bookDto.setCategory_ids(book.getCategories().stream()
-                .map(category -> category.getId())
-                .collect(Collectors.toSet()));
-        return bookDto;
-    }
-
-    private Book convertToEntity(BookDto bookDto) {
-        Book book = new Book();
-        book.setId(bookDto.getId());
-        book.setTitle(bookDto.getTitle());
-        book.setContent(bookDto.getContent());
-        book.setAuthor(authorRepository.findById(bookDto.getAuthor_id()).orElse(null));
-        book.setCategories(new HashSet<>(categoryRepository.findAllById(bookDto.getCategory_ids())));
-
-        return book;
-    }
-
     @PostMapping
-    public BookDto createBook(@RequestBody BookDto bookDto) {
-        Book book = convertToEntity(bookDto);
-        Book savedBook = bookRepository.save(book);
-        return convertToDto(savedBook);
+    public Book createBook(@RequestBody BookDto bookDto) {
+        // Récupérer l'auteur et les catégories en fonction de leurs IDs
+        Author author = authorRepository.findById(bookDto.getAuthor_id())
+                .orElseThrow(() -> new RuntimeException("Author not found"));
+
+        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(bookDto.getCategory_ids()));
+
+        // Créer un nouveau livre avec les données du DTO
+        Book book = new Book();
+        book.setTitle(bookDto.getTitle());
+        book.setAuthor(author);
+        book.setCategories(categories);
+
+        return bookRepository.save(book);
     }
 
     @GetMapping
-    public List<BookDto> getAllBooks() {
-        return bookRepository.findAll().stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public BookDto getBook(@PathVariable Long id) {
+    public Book getBook(@PathVariable Long id) {
         Optional<Book> book = bookRepository.findById(id);
-        return book.map(this::convertToDto).orElse(null);
+        return book.orElse(null);
     }
 
     @PutMapping("/{id}")
-    public BookDto updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
-        if (bookRepository.existsById(id)) {
-            bookDto.setId(id); // Garder l'ID du livre existant
-            Book updatedBook = convertToEntity(bookDto);
-            Book savedBook = bookRepository.save(updatedBook);
-            return convertToDto(savedBook);
+    public Book updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
+        Optional<Book> existingBookOpt = bookRepository.findById(id);
+        if (existingBookOpt.isPresent()) {
+            Book existingBook = existingBookOpt.get();
+
+            Author author = authorRepository.findById(bookDto.getAuthor_id())
+                    .orElseThrow(() -> new RuntimeException("Author not found"));
+
+            Set<Category> categories = new HashSet<>(categoryRepository.findAllById(bookDto.getCategory_ids()));
+
+            // Mettre à jour les champs du livre existant
+            existingBook.setTitle(bookDto.getTitle());
+            existingBook.setAuthor(author);
+            existingBook.setCategories(categories);
+
+            return bookRepository.save(existingBook);
         }
         return null;
     }
@@ -86,16 +83,12 @@ public class BookController {
     }
 
     @GetMapping("/author/{authorId}")
-    public List<BookDto> getBooksByAuthor(@PathVariable Long authorId) {
-        return bookRepository.findByAuthorId(authorId).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public List<Book> getBooksByAuthor(@PathVariable Long authorId) {
+        return bookRepository.findByAuthorId(authorId);
     }
 
     @GetMapping("/category/{categoryId}")
-    public List<BookDto> getBooksByCategory(@PathVariable Long categoryId) {
-        return bookRepository.findByCategories_Id(categoryId).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public List<Book> getBooksByCategory(@PathVariable Long categoryId) {
+        return bookRepository.findByCategories_Id(categoryId);
     }
 }

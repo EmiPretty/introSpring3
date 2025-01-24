@@ -1,6 +1,8 @@
 package fr.learn.introSpring3.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +16,7 @@ public class Author {
     private String name;
 
     @OneToMany(mappedBy = "author")
+    @JsonIgnore  // Ignore la liste des livres pour éviter la boucle infinie
     private Set<Book> books = new HashSet<>();
 
     public Long getId() {
