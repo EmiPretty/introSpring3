@@ -22,7 +22,7 @@ public class Book {
     @JoinColumn(name = "author_id", nullable = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @JsonProperty("author")  // Pour que l'auteur apparaisse sous le nom "author"
+    @JsonProperty("author")
     private Author author;
 
     @ManyToMany
@@ -33,10 +33,8 @@ public class Book {
     )
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @JsonInclude(JsonInclude.Include.NON_NULL) // N'inclut les catégories que si elles existent
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Set<Category> categories = new HashSet<>();
-
-    // Getters and Setters
 
     public Long getId() {
         return id;
